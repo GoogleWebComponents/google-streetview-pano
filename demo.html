@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+
+<head>
+
+  <title>google-map-streetview-panorama Demo</title>
+
+  <script src="../platform/platform.js"></script>
+  <link rel="import" href="google-map-streetview-panorama.html">
+  <style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: black;
+  }
+  </style>
+</head>
+
+<body unresolved>
+
+  <polymer-element name="x-demo" attributes="panoid heading pitch zoom">
+    <template>
+      <style>
+      google-map {
+        display: none;
+      }
+      google-map-streetview-panorama {
+        display: block;
+        height: 80%;
+      }
+      </style>
+      <google-map map="{{map}}"></google-map>
+
+      <google-map-streetview-panorama map="{{map}}" panoid="{{panoid}}" heading="{{heading}}" pitch="{{pitch}}" zoom="{{zoom}}" disableDefaultUI>
+      </google-map-streetview-panorama>
+    </template>
+    <script>
+    Polymer('x-demo', {
+      heading: 330,
+      pitch: -2,
+      zoom: 0.8
+    });
+    </script>
+  </polymer-element>
+
+  <x-demo panoid="RjEjGqu4ymMAAAAGOtaGAQ" heading="350" pitch="-2" zoom="0.8">
+  </x-demo>
+
+  <button onclick="showMachu();">Show me Machu Pichu</button>
+  <button onclick="showPagoda();">Show me Shwedagon Pagoda</button>
+  <button onclick="showStatue();">Show me Statue of Vishnu</button>
+
+  <script>
+  var demo = document.querySelector('x-demo');
+  function showMachu() {
+    demo.setAttribute('panoid', 'VsCKIVGfvpEAAAQJKfdW1w');
+    demo.setAttribute('heading', 330);
+    demo.setAttribute('pitch', -2);
+    demo.setAttribute('zoom', 0.8);
+  }
+  function showPagoda() {
+    demo.setAttribute('panoid', '7RMa9EpG8aUAAAAGOptm3Q');
+    demo.setAttribute('heading', 330);
+    demo.setAttribute('pitch', 15);
+    demo.setAttribute('zoom', 0.2);
+  }
+  function showStatue() {
+    demo.setAttribute('panoid', 'pVFRQcvJ2IEAAAGuvUxa_w');
+    demo.setAttribute('heading', 80);
+    demo.setAttribute('pitch', 7);
+    demo.setAttribute('zoom', 0.2);
+  }
+  </script>
+
+</body>
+
+</html>
