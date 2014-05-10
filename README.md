@@ -1,4 +1,4 @@
-google-map-streetview-panorama
+google-streetview-pano
 ================
 
-See the [component page](http://robdodson.github.io/google-map-streetview-panorama) for more information.
+See the [component page](http://robdodson.github.io/google-streetview-pano) for more information.
