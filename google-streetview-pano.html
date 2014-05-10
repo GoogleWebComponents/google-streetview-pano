@@ -1,21 +1,18 @@
 <link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../google-map/google-map.html">
+<link rel="import" href="../google-apis/google-apis.html">
 
 <!--
-Element for generating a Google Maps Street View Panorama. This element requires a `google-map` element be present on the page in order to load the Google Maps API.
+Element for generating a Google Maps Street View Panorama.
 
 ##### Example
 
-    <google-map map="{{map}}"></google-map>
-
-    <google-map-streetview-panorama
-      map="{{map}}"
-      panoid="RjEjGqu4ymMAAAAGOtaGAQ"
+    <google-streetview-pano
+      panoid="CWskcsTEZBNXaD8gG-zATA"
       heading="330"
       pitch="-2"
       zoom="0.8"
       disableDefaultUI>
-    </google-map-streetview-panorama>
+    </google-streetview-pano>
 
 There are tons of great panoramas on the [Google Maps | Views page](https://www.google.com/maps/views/home?gl=us)
 
@@ -25,12 +22,12 @@ google.com/maps/views/view/102684927602131521305/photo/**1szTnskrdKIAAAGuu3fZRw*
 
 The hash in bold is the `panoid`. You'll often need to dial in the `heading`, `pitch` and `zoom` manually.
 
-@element google-map-streetview-panorama
+@element google-streetview-pano
 @blurb Element for generating a Google Maps Street View Panorama
 @status alpha
-@url http://robdodson.github.io/google-map-streetview-panorama
+@url http://robdodson.github.io/google-streetview-pano
 -->
-<polymer-element name="google-map-streetview-panorama" attributes="map panoid heading pitch zoom disableDefaultUI">
+<polymer-element name="google-streetview-pano" attributes="apiKey version sensor panoid heading pitch zoom disableDefaultUI">
   <template>
     <style>
     :host {
@@ -40,11 +37,38 @@ The hash in bold is the `panoid`. You'll often need to dial in the `heading`, `p
       height: 100%;
     }
     </style>
+    <google-maps-api apiKey="{{apiKey}}" version="{{version}}" sensor="{{sensor}}" on-api-load="{{mapApiLoaded}}"></google-maps-api>
     <div id="pano" on-mouseenter="{{stop}}" on-mouseleave="{{update}}"></div>
   </template>
   <script>
   (function() {
-    Polymer('google-map-streetview-panorama', {
+    Polymer('google-streetview-pano', {
+      /**
+       * A Maps API key. To obtain an API key, see developers.google.com/maps/documentation/javascript/tutorial#api_key.
+       *
+       * @property apiKey
+       * @type string
+       */
+      apiKey: null,
+
+      /**
+       * Version of the Google Maps API to use.
+       *
+       * @attribute version
+       * @type string
+       * @default 3.exp
+       */
+      version: '3.exp',
+
+      /**
+       * If set, indicates a sensor (such as a GPS locator) was used to determine the user's location.
+       *
+       * @attribute sensor
+       * @type boolean
+       * @default false
+       */
+      sensor: false,
+
       /**
        * Specifies which photosphere to load
        *
@@ -53,7 +77,7 @@ The hash in bold is the `panoid`. You'll often need to dial in the `heading`, `p
        * @attribute panoid
        * @type string
        */
-      panoid: null,
+      panoid: 'CWskcsTEZBNXaD8gG-zATA',
 
       /**
        * The camera heading in degrees relative to true north. True north is 0°, east is 90°, south is 180°, west is 270°.
@@ -98,31 +122,21 @@ The hash in bold is the `panoid`. You'll often need to dial in the `heading`, `p
       sensor: false,
       pano: null,
       rAFid: null,
-      mapChanged: function() {
-        if (this.map && this.map instanceof google.maps.Map) {
-          this.mapReady();
-        }
-      },
-      mapReady: function(timestamp) {
-        if (this.panoid) {
-          cancelAnimationFrame(this.rAFid);
-          var panoramaOptions = {
-            pano: this.panoid,
-            pov: {
-              heading: this.heading,
-              pitch: this.pitch
-            },
-            disableDefaultUI: this.disableDefaultUI,
-            zoom: this.zoom
-          };
-          this.pano = new google.maps.StreetViewPanorama(
-            this.$.pano,
-            panoramaOptions);
-          this.pano.setVisible(true);
-          this.rAFid = requestAnimationFrame(this.update.bind(this));
-        } else {
-          this.rAFid = requestAnimationFrame(this.mapReady.bind(this));
-        }
+      mapApiLoaded: function(timestamp) {
+        var panoramaOptions = {
+          pano: this.panoid,
+          pov: {
+            heading: this.heading,
+            pitch: this.pitch
+          },
+          disableDefaultUI: this.disableDefaultUI,
+          zoom: this.zoom
+        };
+        this.pano = new google.maps.StreetViewPanorama(
+          this.$.pano,
+          panoramaOptions);
+        this.pano.setVisible(true);
+        this.rAFid = requestAnimationFrame(this.update.bind(this));
       },
       update: function(timestamp) {
         this.rAFid = requestAnimationFrame(this.update.bind(this));

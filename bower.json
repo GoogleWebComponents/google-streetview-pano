@@ -1,5 +1,5 @@
 {
-  "name": "google-map-streetview-panorama",
+  "name": "google-streetview-pano",
   "version": "0.0.1",
   "keywords": [
     "google-maps",
@@ -8,7 +8,7 @@
     "polymer"
   ],
   "dependencies": {
-    "polymer": "Polymer/polymer#~0.2.3",
-    "google-map": "PolymerLabs/google-map#~0.2.3"
+    "polymer": "Polymer/polymer#master",
+    "google-apis": "PolymerLabs/google-apis#master"
   }
 }
