@@ -41,125 +41,123 @@ The hash in bold is the `panoid`. You'll often need to dial in the `heading`, `p
     <div id="pano" on-mouseenter="{{stop}}" on-mouseleave="{{update}}"></div>
   </template>
   <script>
-  (function() {
-    Polymer('google-streetview-pano', {
-      /**
-       * A Maps API key. To obtain an API key, see developers.google.com/maps/documentation/javascript/tutorial#api_key.
-       *
-       * @property apiKey
-       * @type string
-       */
-      apiKey: null,
+  Polymer('google-streetview-pano', {
+    /**
+     * A Maps API key. To obtain an API key, see developers.google.com/maps/documentation/javascript/tutorial#api_key.
+     *
+     * @property apiKey
+     * @type string
+     */
+    apiKey: null,
 
-      /**
-       * Version of the Google Maps API to use.
-       *
-       * @attribute version
-       * @type string
-       * @default 3.exp
-       */
-      version: '3.exp',
+    /**
+     * Version of the Google Maps API to use.
+     *
+     * @attribute version
+     * @type string
+     * @default 3.exp
+     */
+    version: '3.exp',
 
-      /**
-       * If set, indicates a sensor (such as a GPS locator) was used to determine the user's location.
-       *
-       * @attribute sensor
-       * @type boolean
-       * @default false
-       */
-      sensor: false,
+    /**
+     * If set, indicates a sensor (such as a GPS locator) was used to determine the user's location.
+     *
+     * @attribute sensor
+     * @type boolean
+     * @default false
+     */
+    sensor: false,
 
-      /**
-       * Specifies which photosphere to load
-       *
-       * **Required**
-       *
-       * @attribute panoid
-       * @type string
-       */
-      panoid: 'CWskcsTEZBNXaD8gG-zATA',
+    /**
+     * Specifies which photosphere to load
+     *
+     * **Required**
+     *
+     * @attribute panoid
+     * @type string
+     */
+    panoid: 'CWskcsTEZBNXaD8gG-zATA',
 
-      /**
-       * The camera heading in degrees relative to true north. True north is 0°, east is 90°, south is 180°, west is 270°.
-       *
-       * **Default**: 45
-       *
-       * @attribute heading
-       * @type number
-       */
-      heading: 45,
+    /**
+     * The camera heading in degrees relative to true north. True north is 0°, east is 90°, south is 180°, west is 270°.
+     *
+     * **Default**: 45
+     *
+     * @attribute heading
+     * @type number
+     */
+    heading: 45,
 
-      /**
-       * The camera pitch in degrees, relative to the street view vehicle. Ranges from 90° (directly upwards) to -90° (directly downwards).
-       *
-       * **Default**: -2
-       *
-       * @attribute pitch
-       * @type number
-       */
-      pitch: -2,
+    /**
+     * The camera pitch in degrees, relative to the street view vehicle. Ranges from 90° (directly upwards) to -90° (directly downwards).
+     *
+     * **Default**: -2
+     *
+     * @attribute pitch
+     * @type number
+     */
+    pitch: -2,
 
-      /**
-       * Sets the zoom level of the panorama. Fully zoomed-out is level 0, where the field of view is 180 degrees.
-       *
-       * **Default**: 1
-       *
-       * @attribute zoom
-       * @type number
-       */
-      zoom: 1,
+    /**
+     * Sets the zoom level of the panorama. Fully zoomed-out is level 0, where the field of view is 180 degrees.
+     *
+     * **Default**: 1
+     *
+     * @attribute zoom
+     * @type number
+     */
+    zoom: 1,
 
-      /**
-       * Enables/disables all default UI.
-       *
-       * **Default**: false
-       *
-       * @attribute disableDefaultUI
-       * @type boolean
-       */
-      disableDefaultUI: false,
-      version: '3.exp',
-      sensor: false,
-      pano: null,
-      rAFid: null,
-      mapApiLoaded: function(timestamp) {
-        var panoramaOptions = {
-          pano: this.panoid,
-          pov: {
-            heading: this.heading,
-            pitch: this.pitch
-          },
-          disableDefaultUI: this.disableDefaultUI,
-          zoom: this.zoom
-        };
-        this.pano = new google.maps.StreetViewPanorama(
-          this.$.pano,
-          panoramaOptions);
-        this.pano.setVisible(true);
-        this.rAFid = requestAnimationFrame(this.update.bind(this));
-      },
-      update: function(timestamp) {
-        this.rAFid = requestAnimationFrame(this.update.bind(this));
-        var pov = this.pano.getPov();
-        pov.heading += 0.05;
-        this.pano.setPov(pov);
-      },
-      reset: function() {
-        var pov = this.pano.getPov();
-        pov.heading = this.heading;
-        pov.pitch = this.pitch;
-        this.pano.setPov(pov);
-      },
-      stop: function() {
-        cancelAnimationFrame(this.rAFid);
-      },
-      panoidChanged: function(oldVal, newVal) {
-        if (this.pano) {
-          this.pano.setPano(newVal);
-          this.reset();
-        }
+    /**
+     * Enables/disables all default UI.
+     *
+     * **Default**: false
+     *
+     * @attribute disableDefaultUI
+     * @type boolean
+     */
+    disableDefaultUI: false,
+    version: '3.exp',
+    sensor: false,
+    pano: null,
+    rAFid: null,
+    mapApiLoaded: function(timestamp) {
+      var panoramaOptions = {
+        pano: this.panoid,
+        pov: {
+          heading: this.heading,
+          pitch: this.pitch
+        },
+        disableDefaultUI: this.disableDefaultUI,
+        zoom: this.zoom
+      };
+      this.pano = new google.maps.StreetViewPanorama(
+        this.$.pano,
+        panoramaOptions);
+      this.pano.setVisible(true);
+      this.rAFid = requestAnimationFrame(this.update.bind(this));
+    },
+    update: function(timestamp) {
+      this.rAFid = requestAnimationFrame(this.update.bind(this));
+      var pov = this.pano.getPov();
+      pov.heading += 0.05;
+      this.pano.setPov(pov);
+    },
+    reset: function() {
+      var pov = this.pano.getPov();
+      pov.heading = this.heading;
+      pov.pitch = this.pitch;
+      this.pano.setPov(pov);
+    },
+    stop: function() {
+      cancelAnimationFrame(this.rAFid);
+    },
+    panoidChanged: function(oldVal, newVal) {
+      if (this.pano) {
+        this.pano.setPano(newVal);
+        this.reset();
       }
-    });
-  })();
+    }
+  });
   </script>
 </polymer-element>
