@@ -132,13 +132,13 @@ The hash in bold is the `panoid`. You'll often need to dial in the `heading`, `p
         zoom: this.zoom
       };
       this.pano = new google.maps.StreetViewPanorama(
-        this.$.pano,
-        panoramaOptions);
+          this.$.pano,
+          panoramaOptions);
       this.pano.setVisible(true);
-      this.rAFid = requestAnimationFrame(this.update.bind(this));
+      this.async(this.update);
     },
     update: function(timestamp) {
-      this.rAFid = requestAnimationFrame(this.update.bind(this));
+      this.async(this.update);
       var pov = this.pano.getPov();
       pov.heading += 0.05;
       this.pano.setPov(pov);
