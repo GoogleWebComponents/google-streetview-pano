@@ -1,0 +1,163 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../google-apis/google-apis.html">
+
+<!--
+Element for generating a Google Maps Street View Panorama.
+
+##### Example
+
+    <google-streetview-pano
+      panoid="CWskcsTEZBNXaD8gG-zATA"
+      heading="330"
+      pitch="-2"
+      zoom="0.8"
+      disableDefaultUI>
+    </google-streetview-pano>
+
+There are tons of great panoramas on the [Google Maps | Views page](https://www.google.com/maps/views/home?gl=us)
+
+To grab a panorama, look at its url in the address bar. For example:
+
+google.com/maps/views/view/102684927602131521305/photo/**1szTnskrdKIAAAGuu3fZRw**
+
+The hash in bold is the `panoid`. You'll often need to dial in the `heading`, `pitch` and `zoom` manually.
+
+@element google-streetview-pano
+@blurb Element for generating a Google Maps Street View Panorama
+@status alpha
+@url http://robdodson.github.io/google-streetview-pano
+-->
+<polymer-element name="google-streetview-pano" attributes="apiKey version sensor panoid heading pitch zoom disableDefaultUI">
+  <template>
+    <style>
+    :host {
+      display: block;
+    }
+    #pano {
+      height: 100%;
+    }
+    </style>
+    <google-maps-api apiKey="{{apiKey}}" version="{{version}}" sensor="{{sensor}}" on-api-load="{{mapApiLoaded}}"></google-maps-api>
+    <div id="pano" on-mouseenter="{{stop}}" on-mouseleave="{{update}}"></div>
+  </template>
+  <script>
+  Polymer('google-streetview-pano', {
+    /**
+     * A Maps API key. To obtain an API key, see developers.google.com/maps/documentation/javascript/tutorial#api_key.
+     *
+     * @property apiKey
+     * @type string
+     */
+    apiKey: null,
+
+    /**
+     * Version of the Google Maps API to use.
+     *
+     * @attribute version
+     * @type string
+     * @default 3.exp
+     */
+    version: '3.exp',
+
+    /**
+     * If set, indicates a sensor (such as a GPS locator) was used to determine the user's location.
+     *
+     * @attribute sensor
+     * @type boolean
+     * @default false
+     */
+    sensor: false,
+
+    /**
+     * Specifies which photosphere to load
+     *
+     * **Required**
+     *
+     * @attribute panoid
+     * @type string
+     */
+    panoid: 'CWskcsTEZBNXaD8gG-zATA',
+
+    /**
+     * The camera heading in degrees relative to true north. True north is 0°, east is 90°, south is 180°, west is 270°.
+     *
+     * **Default**: 45
+     *
+     * @attribute heading
+     * @type number
+     */
+    heading: 45,
+
+    /**
+     * The camera pitch in degrees, relative to the street view vehicle. Ranges from 90° (directly upwards) to -90° (directly downwards).
+     *
+     * **Default**: -2
+     *
+     * @attribute pitch
+     * @type number
+     */
+    pitch: -2,
+
+    /**
+     * Sets the zoom level of the panorama. Fully zoomed-out is level 0, where the field of view is 180 degrees.
+     *
+     * **Default**: 1
+     *
+     * @attribute zoom
+     * @type number
+     */
+    zoom: 1,
+
+    /**
+     * Enables/disables all default UI.
+     *
+     * **Default**: false
+     *
+     * @attribute disableDefaultUI
+     * @type boolean
+     */
+    disableDefaultUI: false,
+    version: '3.exp',
+    sensor: false,
+    pano: null,
+    rAFid: null,
+    mapApiLoaded: function(timestamp) {
+      var panoramaOptions = {
+        pano: this.panoid,
+        pov: {
+          heading: this.heading,
+          pitch: this.pitch
+        },
+        disableDefaultUI: this.disableDefaultUI,
+        zoom: this.zoom
+      };
+      this.pano = new google.maps.StreetViewPanorama(
+          this.$.pano,
+          panoramaOptions);
+      this.pano.setVisible(true);
+      this.async(this.update);
+    },
+    update: function(timestamp) {
+      this.async(this.update);
+      var pov = this.pano.getPov();
+      pov.heading += 0.05;
+      this.pano.setPov(pov);
+    },
+    reset: function() {
+      var pov = this.pano.getPov();
+      pov.heading = this.heading;
+      pov.pitch = this.pitch;
+      this.pano.setPov(pov);
+    },
+    stop: function() {
+      cancelAnimationFrame(this.rAFid);
+    },
+    panoidChanged: function(oldVal, newVal) {
+      if (this.pano) {
+        this.pano.setPano(newVal);
+        this.reset();
+      }
+    }
+  });
+  </script>
+</polymer-element>

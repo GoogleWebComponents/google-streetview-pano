@@ -3,10 +3,10 @@
 
 <head>
 
-  <title>google-map-streetview-panorama Demo</title>
+  <title>google-streetview-pano Demo</title>
 
   <script src="../platform/platform.js"></script>
-  <link rel="import" href="google-map-streetview-panorama.html">
+  <link rel="import" href="google-streetview-pano.html">
   <style>
   html, body {
     margin: 0;
@@ -22,18 +22,14 @@
   <polymer-element name="x-demo" attributes="panoid heading pitch zoom">
     <template>
       <style>
-      google-map {
-        display: none;
-      }
-      google-map-streetview-panorama {
+      google-streetview-pano {
         display: block;
         height: 80%;
       }
       </style>
-      <google-map map="{{map}}"></google-map>
 
-      <google-map-streetview-panorama map="{{map}}" panoid="{{panoid}}" heading="{{heading}}" pitch="{{pitch}}" zoom="{{zoom}}" disableDefaultUI>
-      </google-map-streetview-panorama>
+      <google-streetview-pano panoid="{{panoid}}" heading="{{heading}}" pitch="{{pitch}}" zoom="{{zoom}}" disableDefaultUI>
+      </google-streetview-pano>
     </template>
     <script>
     Polymer('x-demo', {
