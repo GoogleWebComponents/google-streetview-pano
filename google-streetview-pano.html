@@ -27,7 +27,7 @@ The hash in bold is the `panoid`. You'll often need to dial in the `heading`, `p
 @status alpha
 @url http://robdodson.github.io/google-streetview-pano
 -->
-<polymer-element name="google-streetview-pano" attributes="apiKey version sensor panoid heading pitch zoom disableDefaultUI">
+<polymer-element name="google-streetview-pano" attributes="apiKey version panoid heading pitch zoom disableDefaultUI">
   <template>
     <style>
     :host {
@@ -37,7 +37,7 @@ The hash in bold is the `panoid`. You'll often need to dial in the `heading`, `p
       height: 100%;
     }
     </style>
-    <google-maps-api apiKey="{{apiKey}}" version="{{version}}" sensor="{{sensor}}" on-api-load="{{mapApiLoaded}}"></google-maps-api>
+    <google-maps-api apiKey="{{apiKey}}" version="{{version}}" on-api-load="{{mapApiLoaded}}"></google-maps-api>
     <div id="pano" on-mouseenter="{{stop}}" on-mouseleave="{{update}}"></div>
   </template>
   <script>
@@ -58,15 +58,6 @@ The hash in bold is the `panoid`. You'll often need to dial in the `heading`, `p
      * @default 3.exp
      */
     version: '3.exp',
-
-    /**
-     * If set, indicates a sensor (such as a GPS locator) was used to determine the user's location.
-     *
-     * @attribute sensor
-     * @type boolean
-     * @default false
-     */
-    sensor: false,
 
     /**
      * Specifies which photosphere to load
@@ -118,7 +109,6 @@ The hash in bold is the `panoid`. You'll often need to dial in the `heading`, `p
      */
     disableDefaultUI: false,
     version: '3.exp',
-    sensor: false,
     pano: null,
     rAFid: null,
     mapApiLoaded: function(timestamp) {
