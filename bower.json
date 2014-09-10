@@ -21,7 +21,7 @@
     "web-components",
     "polymer",
     "streetview",
-    "apis"
+    "apis",
     "google-maps",
     "google"
   ],
