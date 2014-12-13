@@ -6,7 +6,7 @@
 
   <title>google-streetview-pano Demo</title>
 
-  <script src="../platform/platform.js"></script>
+  <script src="../webcomponentsjs/webcomponents.js"></script>
   <link rel="import" href="google-streetview-pano.html">
   <style>
   html, body {
@@ -45,7 +45,7 @@
   </x-demo>
 
   <button onclick="showMachu();">Show me Machu Pichu</button>
-  <button onclick="showPagoda();">Show me Shwedagon Pagoda</button>
+  <button onclick="showBrazil();">Show me Brazil</button>
   <button onclick="showStatue();">Show me Statue of Vishnu</button>
 
   <script>
@@ -56,9 +56,9 @@
     demo.setAttribute('pitch', -2);
     demo.setAttribute('zoom', 0.8);
   }
-  function showPagoda() {
-    demo.setAttribute('panoid', '7RMa9EpG8aUAAAAGOptm3Q');
-    demo.setAttribute('heading', 330);
+  function showBrazil() {
+    demo.setAttribute('panoid', 'CkmCkfwvIGUAAAQW-qy0KQ');
+    demo.setAttribute('heading', 210);
     demo.setAttribute('pitch', 15);
     demo.setAttribute('zoom', 0.2);
   }
