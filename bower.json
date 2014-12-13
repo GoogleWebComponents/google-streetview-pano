@@ -1,6 +1,6 @@
 {
   "name": "google-streetview-pano",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "homepage": "http://googlewebcomponents.github.io/google-streetview-pano",
   "description": "Google Maps street view web component",
   "main": "google-streetview-pano.html",
