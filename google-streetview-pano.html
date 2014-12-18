@@ -27,7 +27,7 @@ The hash in bold is the `panoid`. You'll often need to dial in the `heading`, `p
 @status alpha
 @url http://googlewebcomponents.github.io/google-streetview-pano
 -->
-<polymer-element name="google-streetview-pano" attributes="apiKey version panoid heading pitch zoom disableDefaultUI">
+<polymer-element name="google-streetview-pano" attributes="apiKey clientId language libraries version panoid heading pitch zoom disableDefaultUI">
   <template>
     <style>
     :host {
@@ -37,7 +37,11 @@ The hash in bold is the `panoid`. You'll often need to dial in the `heading`, `p
       height: 100%;
     }
     </style>
-    <google-maps-api apiKey="{{apiKey}}" version="{{version}}" on-api-load="{{mapApiLoaded}}"></google-maps-api>
+    <google-maps-api apiKey="{{apiKey}}" version="{{version}}"
+                     libraries="{{libraries}}"
+                     clientId="{{clientId}}"
+                     language="{{language}}"
+                     client on-api-load="{{mapApiLoaded}}"></google-maps-api>
     <div id="pano" on-mouseenter="{{stop}}" on-mouseleave="{{update}}"></div>
   </template>
   <script>
@@ -50,6 +54,39 @@ The hash in bold is the `panoid`. You'll often need to dial in the `heading`, `p
      * @default null
      */
     apiKey: null,
+
+    /**
+     * A Maps API for Business Client ID. To obtain a Maps API for Business Client ID, see developers.google.com/maps/documentation/business/.
+     * If set, a Client ID will take precedence over an API Key.
+     *
+     * @attribute clientId
+     * @type string
+     */
+    clientId: null,
+
+    /**
+     * The localized language to load the Maps API with. For more information
+     * see https://developers.google.com/maps/documentation/javascript/basics#Language
+     *
+     * Note: the Maps API defaults to the preferred language setting of the browser.
+     * Use this parameter to override that behavior.
+     *
+     * @attribute language
+     * @type string
+     * @default null
+     */
+    language: null,
+
+    /**
+     * A comma separated list (e.g. "places,geometry") of libraries to load
+     * with this map. Defaults to "places". For more information see
+     * https://developers.google.com/maps/documentation/javascript/libraries.
+     *
+     * @attribute libraries
+     * @type string
+     * @default "places"
+     */
+    libraries: "places",
 
     /**
      * Version of the Google Maps API to use.
