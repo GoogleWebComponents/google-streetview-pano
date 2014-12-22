@@ -27,7 +27,7 @@ The hash in bold is the `panoid`. You'll often need to dial in the `heading`, `p
 @status alpha
 @url http://googlewebcomponents.github.io/google-streetview-pano
 -->
-<polymer-element name="google-streetview-pano" attributes="apiKey clientId language libraries version panoid heading pitch zoom disableDefaultUI">
+<polymer-element name="google-streetview-pano" attributes="apiKey clientId language libraries version panoid heading pitch zoom disableDefaultUI disableAutoPan">
   <template>
     <style>
     :host {
@@ -42,7 +42,8 @@ The hash in bold is the `panoid`. You'll often need to dial in the `heading`, `p
                      clientId="{{clientId}}"
                      language="{{language}}"
                      client on-api-load="{{mapApiLoaded}}"></google-maps-api>
-    <div id="pano" on-mouseenter="{{stop}}" on-mouseleave="{{update}}"></div>
+    <div id="pano" on-mouseenter="{{autoStop_}}"
+                   on-mouseleave="{{autoUpdate_}}"></div>
   </template>
   <script>
   Polymer({
@@ -136,13 +137,23 @@ The hash in bold is the `panoid`. You'll often need to dial in the `heading`, `p
     zoom: 1,
 
     /**
-     * Enables/disables all default UI.
+     * If true, disables all default UI.
      *
      * @attribute disableDefaultUI
      * @type boolean
      * @default false
      */
     disableDefaultUI: false,
+
+    /**
+     * If true, disables the auto panning animation
+     *
+     * @attribute disableAutoPan
+     * @type boolean
+     * @default false
+     */
+    disableAutoPan: false,
+
     pano: null,
     rAFid: null,
     mapApiLoaded: function() {
@@ -151,6 +162,9 @@ The hash in bold is the `panoid`. You'll often need to dial in the `heading`, `p
           this.getPanoOptions());
       this.pano.setVisible(true);
 
+      if (this.disableAutoPan) {
+        return;
+      }
       // Kickoff the rotating animation
       this.rAFid = requestAnimationFrame(this.update.bind(this));
     },
@@ -188,6 +202,14 @@ The hash in bold is the `panoid`. You'll often need to dial in the `heading`, `p
       this.pano.setPov(pov);
     },
 
+    autoUpdate_: function() {
+      if (this.disableAutoPan) {
+        return;
+      }
+
+      this.update();
+    },
+
     /**
      * Reset the pov for the panorama.
      * @method reset
@@ -205,6 +227,14 @@ The hash in bold is the `panoid`. You'll often need to dial in the `heading`, `p
      */
     stop: function() {
       cancelAnimationFrame(this.rAFid);
+    },
+
+    autoStop_: function() {
+      if (this.disableAutoPan) {
+        return;
+      }
+
+      this.stop();
     },
 
     panoidChanged: function(oldVal, newVal) {
