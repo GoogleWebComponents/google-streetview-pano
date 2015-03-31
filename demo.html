@@ -9,64 +9,46 @@
   <script src="../webcomponentsjs/webcomponents.js"></script>
   <link rel="import" href="google-streetview-pano.html">
   <style>
-  html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    background: black;
-  }
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background: black;
+    }
+    google-streetview-pano {
+      display: block;
+      height: 80%;
+    }
   </style>
 </head>
 
-<body unresolved>
+<body>
 
-  <polymer-element name="x-demo" attributes="panoid heading pitch zoom">
-    <template>
-      <style>
-      google-streetview-pano {
-        display: block;
-        height: 80%;
-      }
-      </style>
-
-      <google-streetview-pano panoid="{{panoid}}" heading="{{heading}}" pitch="{{pitch}}" zoom="{{zoom}}" disableDefaultUI>
-      </google-streetview-pano>
-    </template>
-    <script>
-    Polymer('x-demo', {
-      heading: 330,
-      pitch: -2,
-      zoom: 0.8
-    });
-    </script>
-  </polymer-element>
-
-  <x-demo panoid="RjEjGqu4ymMAAAAGOtaGAQ" heading="350" pitch="-2" zoom="0.8">
-  </x-demo>
+  <google-streetview-pano pano-id="RjEjGqu4ymMAAAAGOtaGAQ" heading="350" pitch="-2" zoom="0.8" disableDefaultUI></google-streetview-pano>
 
   <button onclick="showMachu();">Show me Machu Pichu</button>
   <button onclick="showBrazil();">Show me Brazil</button>
   <button onclick="showStatue();">Show me Statue of Vishnu</button>
 
   <script>
-  var demo = document.querySelector('x-demo');
+  var pano = document.querySelector('google-streetview-pano');
   function showMachu() {
-    demo.setAttribute('panoid', 'VsCKIVGfvpEAAAQJKfdW1w');
-    demo.setAttribute('heading', 330);
-    demo.setAttribute('pitch', -2);
-    demo.setAttribute('zoom', 0.8);
+    pano.heading = 330;
+    pano.pitch = -2;
+    pano.zoom = 0.8;
+    pano.panoId = 'VsCKIVGfvpEAAAQJKfdW1w';
   }
   function showBrazil() {
-    demo.setAttribute('panoid', 'CkmCkfwvIGUAAAQW-qy0KQ');
-    demo.setAttribute('heading', 210);
-    demo.setAttribute('pitch', 15);
-    demo.setAttribute('zoom', 0.2);
+    pano.heading = 210;
+    pano.pitch = 15;
+    pano.zoom = 0.2;
+    pano.panoId = 'CkmCkfwvIGUAAAQW-qy0KQ';
   }
   function showStatue() {
-    demo.setAttribute('panoid', 'pVFRQcvJ2IEAAAGuvUxa_w');
-    demo.setAttribute('heading', 80);
-    demo.setAttribute('pitch', 7);
-    demo.setAttribute('zoom', 0.2);
+    pano.heading = 80;
+    pano.pitch = 7;
+    pano.zoom = 0.2;
+    pano.panoId = 'pVFRQcvJ2IEAAAGuvUxa_w';
   }
   </script>
 </body>

@@ -1,5 +1,5 @@
 <link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../google-apis/google-apis.html">
+<link rel="import" href="../google-apis/google-maps-api.html">
 
 <!--
 Element for generating a Google Maps Street View Panorama.
@@ -7,7 +7,7 @@ Element for generating a Google Maps Street View Panorama.
 ##### Example
 
     <google-streetview-pano
-      panoid="CWskcsTEZBNXaD8gG-zATA"
+      pano-id="CWskcsTEZBNXaD8gG-zATA"
       heading="330"
       pitch="-2"
       zoom="0.8"
@@ -20,139 +20,173 @@ To grab a panorama, look at its url in the address bar. For example:
 
 google.com/maps/views/view/102684927602131521305/photo/**1szTnskrdKIAAAGuu3fZRw**
 
-The hash in bold is the `panoid`. You'll often need to dial in the `heading`, `pitch` and `zoom` manually.
+The hash in bold is the `pano-id`. You'll often need to dial in the `heading`, `pitch` and `zoom` manually.
 
 @element google-streetview-pano
 @blurb Element for generating a Google Maps Street View Panorama
 @status alpha
 @url http://googlewebcomponents.github.io/google-streetview-pano
 -->
-<polymer-element name="google-streetview-pano" attributes="apiKey clientId language libraries version panoid heading pitch zoom disableDefaultUI disableAutoPan">
-  <template>
-    <style>
+
+<dom-module id="google-streetview-pano">
+  <style>
     :host {
       display: block;
     }
     #pano {
       height: 100%;
     }
-    </style>
-    <google-maps-api apiKey="{{apiKey}}" version="{{version}}"
+  </style>
+  <template>
+    <google-maps-api api-key="{{apiKey}}" version="{{version}}"
                      libraries="{{libraries}}"
-                     clientId="{{clientId}}"
+                     client-id="{{clientId}}"
                      language="{{language}}"
-                     client on-api-load="{{mapApiLoaded}}"></google-maps-api>
-    <div id="pano" on-mouseenter="{{autoStop_}}"
-                   on-mouseleave="{{autoUpdate_}}"></div>
+                     client 
+                     on-api-load="mapApiLoaded"></google-maps-api>
+    <div id="pano" on-mouseenter="autoStop_"
+                   on-mouseleave="autoUpdate_"></div>
   </template>
-  <script>
+</dom-module>
+
+<script>
+  "use strict";
+
   Polymer({
-    /**
-     * A Maps API key. To obtain an API key, see developers.google.com/maps/documentation/javascript/tutorial#api_key.
-     *
-     * @property apiKey
-     * @type string
-     * @default null
-     */
-    apiKey: null,
+    is: 'google-streetview-pano',
+      properties: {
+      /**
+       * A Maps API key. To obtain an API key, see developers.google.com/maps/documentation/javascript/tutorial#api_key.
+       *
+       * @property apiKey
+       * @type string
+       * @default null
+       */
+      apiKey: String,
 
-    /**
-     * A Maps API for Business Client ID. To obtain a Maps API for Business Client ID, see developers.google.com/maps/documentation/business/.
-     * If set, a Client ID will take precedence over an API Key.
-     *
-     * @attribute clientId
-     * @type string
-     */
-    clientId: null,
+      /**
+       * A Maps API for Business Client ID. To obtain a Maps API for Business Client ID, see developers.google.com/maps/documentation/business/.
+       * If set, a Client ID will take precedence over an API Key.
+       *
+       * @attribute clientId
+       * @type string
+       */
+      clientId: String,
 
-    /**
-     * The localized language to load the Maps API with. For more information
-     * see https://developers.google.com/maps/documentation/javascript/basics#Language
-     *
-     * Note: the Maps API defaults to the preferred language setting of the browser.
-     * Use this parameter to override that behavior.
-     *
-     * @attribute language
-     * @type string
-     * @default null
-     */
-    language: null,
+      /**
+       * The localized language to load the Maps API with. For more information
+       * see https://developers.google.com/maps/documentation/javascript/basics#Language
+       *
+       * Note: the Maps API defaults to the preferred language setting of the browser.
+       * Use this parameter to override that behavior.
+       *
+       * @attribute language
+       * @type string
+       * @default null
+       */
+      language: String,
 
-    /**
-     * A comma separated list (e.g. "places,geometry") of libraries to load
-     * with this map. Defaults to "places". For more information see
-     * https://developers.google.com/maps/documentation/javascript/libraries.
-     *
-     * @attribute libraries
-     * @type string
-     * @default "places"
-     */
-    libraries: "places",
+      /**
+       * A comma separated list (e.g. "places,geometry") of libraries to load
+       * with this map. Defaults to "places". For more information see
+       * https://developers.google.com/maps/documentation/javascript/libraries.
+       *
+       * @attribute libraries
+       * @type string
+       * @default "places"
+       */
+      libraries: {
+        type: String,
+        value: "places"
+      },
 
-    /**
-     * Version of the Google Maps API to use.
-     *
-     * @attribute version
-     * @type string
-     * @default 3.exp
-     */
-    version: '3.exp',
+      /**
+       * Version of the Google Maps API to use.
+       *
+       * @attribute version
+       * @type string
+       * @default 3.exp
+       */
+      version: {
+        type: String,
+        value: '3.exp'
+      },
 
-    /**
-     * Specifies which photosphere to load
-     *
-     * **Required**
-     *
-     * @attribute panoid
-     * @type string
-     * @default null
-     */
-    panoid: null,
+      /**
+       * Specifies which photosphere to load
+       *
+       * **Required**
+       *
+       * @attribute panoId
+       * @type string
+       * @default null
+       */
+      panoId: {
+        type: String,
+        observer: 'panoIdChanged'
+      },
 
-    /**
-     * The camera heading in degrees relative to true north. True north is 0°, east is 90°, south is 180°, west is 270°.
-     *
-     * @attribute heading
-     * @type number
-     * @default 45
-     */
-    heading: 45,
+      /**
+       * The camera heading in degrees relative to true north. True north is 0°, east is 90°, south is 180°, west is 270°.
+       *
+       * @attribute heading
+       * @type number
+       * @default 45
+       */
+      heading: {
+        type: Number,
+        value: 45
+      },
 
-    /**
-     * The camera pitch in degrees, relative to the street view vehicle. Ranges from 90° (directly upwards) to -90° (directly downwards).
-     *
-     * @attribute pitch
-     * @type number
-     * @default -2
-     */
-    pitch: -2,
+      /**
+       * The camera pitch in degrees, relative to the street view vehicle. Ranges from 90° (directly upwards) to -90° (directly downwards).
+       *
+       * @attribute pitch
+       * @type number
+       * @default -2
+       */
+      pitch: {
+        type: Number,
+        value: -2
+      },
 
-    /**
-     * Sets the zoom level of the panorama. Fully zoomed-out is level 0, where the field of view is 180 degrees.
-     *
-     * @attribute zoom
-     * @type number
-     * @default 1
-     */
-    zoom: 1,
+      /**
+       * Sets the zoom level of the panorama. Fully zoomed-out is level 0, where the field of view is 180 degrees.
+       *
+       * @attribute zoom
+       * @type number
+       * @default 1
+       */
+      zoom: {
+        type: Number,
+        value: 1
+      },
 
-    /**
-     * If true, disables all default UI.
-     *
-     * @attribute disableDefaultUI
-     * @type boolean
-     * @default false
-     */
-    disableDefaultUI: false,
+      /**
+       * If true, disables all default UI.
+       *
+       * @attribute disableDefaultUI
+       * @type boolean
+       * @default false
+       */
+      disableDefaultUI: {
+        type: Boolean,
+        value: false
+      },
 
-    /**
-     * If true, disables the auto panning animation
-     *
-     * @attribute disableAutoPan
-     * @type boolean
-     * @default false
-     */
-    disableAutoPan: false,
+      /**
+       * If true, disables the auto panning animation
+       *
+       * @attribute disableAutoPan
+       * @type boolean
+       * @default false
+       */
+      disableAutoPan: {
+        type: Boolean,
+        value: false
+      },
+
+    },
 
     pano: null,
     rAFid: null,
@@ -178,7 +212,7 @@ The hash in bold is the `panoid`. You'll often need to dial in the `heading`, `p
      */
     getPanoOptions: function() {
       var panoOptions = {
-        pano: this.panoid,
+        pano: this.panoId,
         pov: {
           heading: this.heading,
           pitch: this.pitch
@@ -237,12 +271,11 @@ The hash in bold is the `panoid`. You'll often need to dial in the `heading`, `p
       this.stop();
     },
 
-    panoidChanged: function(oldVal, newVal) {
+    panoIdChanged: function(newVal, oldVal) {
       if (this.pano) {
         this.pano.setPano(newVal);
         this.reset();
       }
     }
   });
-  </script>
-</polymer-element>
+</script>
