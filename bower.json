@@ -26,7 +26,10 @@
     "google"
   ],
   "dependencies": {
-    "polymer": "Polymer/polymer#^0.5.2",
-    "google-apis": "GoogleWebComponents/google-apis#^0.4.3"
+    "polymer": "Polymer/polymer#v0.8.0-rc.7",
+    "google-apis": "GoogleWebComponents/google-apis#0.8-preview"
+  },
+  "devDependencies": {
+    "iron-doc-viewer": "PolymerElements/iron-doc-viewer#^0.8.8"
   }
 }
