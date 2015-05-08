@@ -11,7 +11,7 @@ Element for generating a Google Maps Street View Panorama.
       heading="330"
       pitch="-2"
       zoom="0.8"
-      disableDefaultUI>
+      disable-default-ui>
     </google-streetview-pano>
 
 There are tons of great panoramas on the [Google Maps | Views page](https://www.google.com/maps/views/home?gl=us)
@@ -22,10 +22,6 @@ google.com/maps/views/view/102684927602131521305/photo/**1szTnskrdKIAAAGuu3fZRw*
 
 The hash in bold is the `pano-id`. You'll often need to dial in the `heading`, `pitch` and `zoom` manually.
 
-@element google-streetview-pano
-@blurb Element for generating a Google Maps Street View Panorama
-@status alpha
-@url http://googlewebcomponents.github.io/google-streetview-pano
 -->
 
 <dom-module id="google-streetview-pano">
@@ -42,10 +38,10 @@ The hash in bold is the `pano-id`. You'll often need to dial in the `heading`, `
                      libraries="{{libraries}}"
                      client-id="{{clientId}}"
                      language="{{language}}"
-                     client 
-                     on-api-load="mapApiLoaded"></google-maps-api>
-    <div id="pano" on-mouseenter="autoStop_"
-                   on-mouseleave="autoUpdate_"></div>
+                     client
+                     on-api-load="_mapApiLoaded"></google-maps-api>
+    <div id="pano" on-mouseenter="_autoStop"
+                   on-mouseleave="_autoUpdate"></div>
   </template>
 </dom-module>
 
@@ -57,19 +53,12 @@ The hash in bold is the `pano-id`. You'll often need to dial in the `heading`, `
       properties: {
       /**
        * A Maps API key. To obtain an API key, see developers.google.com/maps/documentation/javascript/tutorial#api_key.
-       *
-       * @property apiKey
-       * @type string
-       * @default null
        */
       apiKey: String,
 
       /**
        * A Maps API for Business Client ID. To obtain a Maps API for Business Client ID, see developers.google.com/maps/documentation/business/.
        * If set, a Client ID will take precedence over an API Key.
-       *
-       * @attribute clientId
-       * @type string
        */
       clientId: String,
 
@@ -80,9 +69,6 @@ The hash in bold is the `pano-id`. You'll often need to dial in the `heading`, `
        * Note: the Maps API defaults to the preferred language setting of the browser.
        * Use this parameter to override that behavior.
        *
-       * @attribute language
-       * @type string
-       * @default null
        */
       language: String,
 
@@ -91,9 +77,6 @@ The hash in bold is the `pano-id`. You'll often need to dial in the `heading`, `
        * with this map. Defaults to "places". For more information see
        * https://developers.google.com/maps/documentation/javascript/libraries.
        *
-       * @attribute libraries
-       * @type string
-       * @default "places"
        */
       libraries: {
         type: String,
@@ -103,9 +86,6 @@ The hash in bold is the `pano-id`. You'll often need to dial in the `heading`, `
       /**
        * Version of the Google Maps API to use.
        *
-       * @attribute version
-       * @type string
-       * @default 3.exp
        */
       version: {
         type: String,
@@ -116,22 +96,14 @@ The hash in bold is the `pano-id`. You'll often need to dial in the `heading`, `
        * Specifies which photosphere to load
        *
        * **Required**
-       *
-       * @attribute panoId
-       * @type string
-       * @default null
        */
       panoId: {
         type: String,
-        observer: 'panoIdChanged'
+        observer: '_panoIdChanged'
       },
 
       /**
        * The camera heading in degrees relative to true north. True north is 0°, east is 90°, south is 180°, west is 270°.
-       *
-       * @attribute heading
-       * @type number
-       * @default 45
        */
       heading: {
         type: Number,
@@ -140,10 +112,6 @@ The hash in bold is the `pano-id`. You'll often need to dial in the `heading`, `
 
       /**
        * The camera pitch in degrees, relative to the street view vehicle. Ranges from 90° (directly upwards) to -90° (directly downwards).
-       *
-       * @attribute pitch
-       * @type number
-       * @default -2
        */
       pitch: {
         type: Number,
@@ -152,10 +120,6 @@ The hash in bold is the `pano-id`. You'll often need to dial in the `heading`, `
 
       /**
        * Sets the zoom level of the panorama. Fully zoomed-out is level 0, where the field of view is 180 degrees.
-       *
-       * @attribute zoom
-       * @type number
-       * @default 1
        */
       zoom: {
         type: Number,
@@ -164,22 +128,14 @@ The hash in bold is the `pano-id`. You'll often need to dial in the `heading`, `
 
       /**
        * If true, disables all default UI.
-       *
-       * @attribute disableDefaultUI
-       * @type boolean
-       * @default false
        */
-      disableDefaultUI: {
+      disableDefaultUi: {
         type: Boolean,
         value: false
       },
 
       /**
        * If true, disables the auto panning animation
-       *
-       * @attribute disableAutoPan
-       * @type boolean
-       * @default false
        */
       disableAutoPan: {
         type: Boolean,
@@ -190,10 +146,10 @@ The hash in bold is the `pano-id`. You'll often need to dial in the `heading`, `
 
     pano: null,
     rAFid: null,
-    mapApiLoaded: function() {
+    _mapApiLoaded: function() {
       this.pano = new google.maps.StreetViewPanorama(
           this.$.pano,
-          this.getPanoOptions());
+          this._getPanoOptions());
       this.pano.setVisible(true);
 
       if (this.disableAutoPan) {
@@ -204,20 +160,16 @@ The hash in bold is the `pano-id`. You'll often need to dial in the `heading`, `
     },
 
     /**
-     * Returns the an object with the current panorama configurations. Useful for
-     * overriding in a subclass.
-     *
-     * @method getPanoOptions
-     * @return {object} Current panorama configuration.
+     * Returns the an object with the current panorama configurations.
      */
-    getPanoOptions: function() {
+    _getPanoOptions: function() {
       var panoOptions = {
         pano: this.panoId,
         pov: {
           heading: this.heading,
           pitch: this.pitch
         },
-        disableDefaultUI: this.disableDefaultUI,
+        disableDefaultUI: this.disableDefaultUi,
         zoom: this.zoom
       };
 
@@ -227,7 +179,6 @@ The hash in bold is the `pano-id`. You'll often need to dial in the `heading`, `
     /**
      * Fired every rAF. Updates the heading to create a slow pan effect
      * Will be canceled by mouse enter or calling stop()
-     * @method update
      */
     update: function() {
       this.rAFid = requestAnimationFrame(this.update.bind(this));
@@ -236,7 +187,7 @@ The hash in bold is the `pano-id`. You'll often need to dial in the `heading`, `
       this.pano.setPov(pov);
     },
 
-    autoUpdate_: function() {
+    _autoUpdate: function() {
       if (this.disableAutoPan) {
         return;
       }
@@ -263,7 +214,7 @@ The hash in bold is the `pano-id`. You'll often need to dial in the `heading`, `
       cancelAnimationFrame(this.rAFid);
     },
 
-    autoStop_: function() {
+    _autoStop: function() {
       if (this.disableAutoPan) {
         return;
       }
@@ -271,7 +222,7 @@ The hash in bold is the `pano-id`. You'll often need to dial in the `heading`, `
       this.stop();
     },
 
-    panoIdChanged: function(newVal, oldVal) {
+    _panoIdChanged: function(newVal, oldVal) {
       if (this.pano) {
         this.pano.setPano(newVal);
         this.reset();
