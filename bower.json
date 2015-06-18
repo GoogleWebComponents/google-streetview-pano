@@ -9,12 +9,9 @@
   ],
   "license": "Apache2",
   "ignore": [
-    "**/.*",
-    "node_modules",
     "bower_components",
     "test",
-    "tests",
-    "../"
+    "tests"
   ],
   "keywords": [
     "web-component",
