@@ -174,9 +174,7 @@ You can also use the position attribute and set it to a position with a computed
      * Called when the Google Maps API has loaded.
      */
     _mapApiLoaded: function() {
-      this.pano = new google.maps.StreetViewPanorama(
-              this.$.pano,
-              this._getPanoOptions());
+      this.pano = new google.maps.StreetViewPanorama(this.$.pano, this._getPanoOptions());
       this.pano.setVisible(true);
 
       if (this.disableAutoPan) {
