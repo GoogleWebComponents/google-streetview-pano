@@ -22,6 +22,16 @@ google.com/maps/views/view/102684927602131521305/photo/**1szTnskrdKIAAAGuu3fZRw*
 
 The hash in bold is the `pano-id`. You'll often need to dial in the `heading`, `pitch` and `zoom` manually.
 
+You can also use the position attribute and set it to a position with a computed value. Example: { lat: 42.345573, lng: -71.098326 }
+
+    <google-streetview-pano
+      position="[[_myComputedPosition()]]"
+      heading="330"
+      pitch="-2"
+      zoom="0.8"
+      disable-default-ui>
+    </google-streetview-pano>
+
 @demo
 -->
 
@@ -50,8 +60,10 @@ The hash in bold is the `pano-id`. You'll often need to dial in the `heading`, `
   "use strict";
 
   Polymer({
+
     is: 'google-streetview-pano',
-      properties: {
+
+    properties: {
       /**
        * A Maps API key. To obtain an API key, see developers.google.com/maps/documentation/javascript/tutorial#api_key.
        */
@@ -96,11 +108,21 @@ The hash in bold is the `pano-id`. You'll often need to dial in the `heading`, `
       /**
        * Specifies which photosphere to load
        *
-       * **Required**
+       *
        */
       panoId: {
         type: String,
         observer: '_panoIdChanged'
+      },
+
+      /**
+       * Specifies which position to load
+       *
+       *
+       */
+      position: {
+        type: Object,
+        observer: '_positionChanged'
       },
 
       /**
@@ -141,16 +163,18 @@ The hash in bold is the `pano-id`. You'll often need to dial in the `heading`, `
       disableAutoPan: {
         type: Boolean,
         value: false
-      },
+      }
 
     },
 
     pano: null,
     rAFid: null,
+
+    /**
+     * Called when the Google Maps API has loaded.
+     */
     _mapApiLoaded: function() {
-      this.pano = new google.maps.StreetViewPanorama(
-          this.$.pano,
-          this._getPanoOptions());
+      this.pano = new google.maps.StreetViewPanorama(this.$.pano, this._getPanoOptions());
       this.pano.setVisible(true);
 
       if (this.disableAutoPan) {
@@ -166,6 +190,7 @@ The hash in bold is the `pano-id`. You'll often need to dial in the `heading`, `
     _getPanoOptions: function() {
       var panoOptions = {
         pano: this.panoId,
+        position: this.position,
         pov: {
           heading: this.heading,
           pitch: this.pitch
@@ -226,6 +251,13 @@ The hash in bold is the `pano-id`. You'll often need to dial in the `heading`, `
     _panoIdChanged: function(newVal, oldVal) {
       if (this.pano) {
         this.pano.setPano(newVal);
+        this.reset();
+      }
+    },
+
+    _positionChanged: function(newVal, oldVal) {
+      if (this.pano) {
+        this.pano.setPosition(newVal);
         this.reset();
       }
     }
