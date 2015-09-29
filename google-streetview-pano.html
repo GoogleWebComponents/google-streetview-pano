@@ -14,6 +14,11 @@ Element for generating a Google Maps Street View Panorama.
       disable-default-ui>
     </google-streetview-pano>
 
+**Note**: To use this element on the same page as `<google-map>` (or other google-map-* components),
+be sure to include the `libraries="places"` attribute on those elements:
+
+   <google-map libraries="places" ...></google-map>
+
 There are tons of great panoramas on the [Google Maps | Views page](https://www.google.com/maps/views/home?gl=us)
 
 To grab a panorama, look at its url in the address bar. For example:
