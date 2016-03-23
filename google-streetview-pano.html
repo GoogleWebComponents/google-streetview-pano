@@ -230,6 +230,14 @@ You can also use the position attribute and set it to a position with a computed
       },
 
       /**
+       * Stop the animation when the element is detached
+       * @method detached
+       */
+      detached: function () {
+        this.stop();
+      },
+
+      /**
        * Cancel the slow panning animation.
        * @method stop
        */
