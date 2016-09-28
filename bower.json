@@ -7,7 +7,7 @@
   "authors": [
     "Rob Dodson"
   ],
-  "license": "Apache2",
+  "license": "Apache-2.0",
   "ignore": [
     "bower_components",
     "test",
